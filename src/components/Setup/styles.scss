@@ -1,0 +1,20 @@
+html,
+body,
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: rgb(231, 235, 240);
+  margin: 0;
+  padding: 15px;
+}
+
+#app-root {
+  display: flex;
+  flex-direction: column;
+  // height: 100%;
+}
