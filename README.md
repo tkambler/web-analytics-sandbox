@@ -18,7 +18,7 @@ npm i && \
 
 ## To Do
 
-- This repository currently lacks a tool for analyzing product analytics. In other words, a tool similar to Mixpanel. Possible options include: [Matomo](https://matomo.org/) (formerly Piwik), [RudderStack](https://www.rudderstack.com/), and [Snowplow](https://snowplow.io/snowplow-open-source/).
+- This repository currently lacks a tool for analyzing product analytics. In other words, a tool similar to Mixpanel. Possible options include: [Matomo](https://matomo.org/) (formerly Piwik), [RudderStack](https://www.rudderstack.com/), [Snowplow](https://snowplow.io/snowplow-open-source/), and [PostHog](https://posthog.com/).
 
 ## Related Resources
 
