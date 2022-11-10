@@ -1,5 +1,7 @@
 # Web Analytics Sandbox
 
+This repository seeks to provide an easily-deployable sandbox for experimenting with concepts pertaining to feature flags and product analytics. It is geared towards React developers.
+
 ## Quick Start
 
 ```
@@ -13,6 +15,10 @@ npm i && \
 - Create a new feature flag with key: `foo`
 - Note the GrowthBook client-side SDK key and modify `./src/config.ts` accordingly.
 - Access the React client UI at: http://localhost:9011/
+
+## To Do
+
+- This repository currently lacks a tool for analyzing product analytics. In other words, a tool similar to Mixpanel. [Matomo](https://matomo.org/) (formerly Piwik) is a _possible_ option.
 
 ## Related Resources
 
