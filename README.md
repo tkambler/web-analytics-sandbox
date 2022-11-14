@@ -1,6 +1,12 @@
 # Web Analytics Sandbox
 
-This repository seeks to provide an easily-deployable sandbox for experimenting with concepts pertaining to feature flags and product analytics. It is geared towards React developers.
+This project provides an easily-deployable sandbox for experimenting with concepts pertaining to feature flags, A/B tests, and product analytics. It allows you to quickly get up and running with the following open-source tools:
+
+- [GrowthBook](https://www.growthbook.io/) - A feature flag & A/B testing platform
+- [Jitsu](https://jitsu.com/) - A data / event ingestion engine (an alternative to [Segment](https://segment.com/))
+- [Umami](https://umami.is/) - A simple alternative to Google Analytics
+
+It also includes a simple [React](https://reactjs.org/) application with which you can interact with these tools.
 
 ## Quick Start
 
@@ -10,16 +16,21 @@ npm i && \
     npm run start
 ```
 
-- Access the GrowthBook UI at: http://localhost:3200/
-- Create a new GrowthBook account and sign in.
-- Create a new feature flag with key: `foo`
-- Note the GrowthBook client-side SDK key and modify `./src/config.ts` accordingly.
-- Access the React client UI at: http://localhost:9011/
+## GrowthBook
 
-## To Do
+Access the GrowthBook UI at [this URL](http://localhost:3200/). Create a new account and sign in. Note the client-side SDK key and modify `./src/config.ts` accordingly.
 
-- This repository currently lacks a tool for analyzing product analytics. In other words, a tool similar to Mixpanel. Possible options include: [Matomo](https://matomo.org/) (formerly Piwik), [RudderStack](https://www.rudderstack.com/), [Snowplow](https://snowplow.io/snowplow-open-source/), and [PostHog](https://posthog.com/).
+## Jitsu
+
+Access the Jitsu UI at [this URL](http://localhost:8000/). Create a new account and sign in.
+
+## Umami
+
+Access the Umami UI at [this URL](http://localhost:3000). Create a new account and sign in.
+## React App
+
+Access the React application at [this URL](http://localhost:9011). There is no supporting back-end server. All API endpoints pertaining to session management are mocked out [here](./src/components/Setup/msw.ts) with [MSW](https://mswjs.io/).
 
 ## Related Resources
 
-- [GrowthBook](https://www.growthbook.io/)
+- [GrowthBook Chrome Developer Tools Extension](https://chrome.google.com/webstore/detail/growthbook-devtools/opemhndcehfgipokneipaafbglcecjia)

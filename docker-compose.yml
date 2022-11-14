@@ -19,5 +19,94 @@ services:
       - MONGODB_URI=mongodb://root:password@mongo:27017/
     volumes:
       - uploads:/usr/local/src/app/packages/back-end/uploads
+  mongo-express:
+    image: mongo-express:latest
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      # - ME_CONFIG_BASICAUTH_USERNAME='root'
+      # - ME_CONFIG_BASICAUTH_PASSWORD='password'
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+    ports:
+      - "127.0.0.1:8081:8081"
+  # Umami
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:umami@db:5432/umami
+      DATABASE_TYPE: postgresql
+      HASH_SALT: replace-me-with-a-random-string
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+    volumes:
+      - ./sql/schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
+      - umami-db-data:/var/lib/postgresql/data
+    restart: always
+  pgadmin:
+    image: dpage/pgadmin4:6.5
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@host.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "127.0.0.1:8080:80"
+  # Jitsu
+  jitsu:
+    container_name: jitsu
+    image: jitsucom/jitsu
+    environment:
+      - REDIS_URL=redis://redis:6379
+      #Retroactive users recognition can affect RAM significant. Read more about the solution https://jitsu.com/docs/other-features/retroactive-user-recognition
+      - USER_RECOGNITION_ENABLED=true
+      - USER_RECOGNITION_REDIS_URL=redis://redis_users_recognition:6380
+      - TERM=xterm-256color
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./jitsu/compose-data/configurator/data/logs:/home/configurator/data/logs
+      - ./jitsu/compose-data/server/data/logs:/home/eventnative/data/logs
+      - ./jitsu/compose-data/server/data/logs/events:/home/eventnative/data/logs/events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - workspace:/home/eventnative/data/airbyte
+    restart: always
+    ports:
+      - "8000:8000"
+    # networks:
+    #   - main
+  redis:
+    container_name: jitsu_redis
+    image: redis:6.2.6-bullseye
+    volumes:
+      - ./jitsu/compose-data/redis/data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -h localhost -p 6379 PING"]
+      interval: 1s
+      timeout: 30s
+    # networks:
+    #   - main
+  redis_users_recognition:
+    container_name: jitsu_redis_users_recognition
+    image: redis:6.2.6-bullseye
+    volumes:
+      - ./jitsu/compose-data/redis_users_recognition/data:/data
+      - ./jitsu/compose-data/redis_users_recognition/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: always
+    # networks:
+    #   - main
 volumes:
   uploads:
+  umami-db-data:
+  workspace:
+    name: jitsu_workspace

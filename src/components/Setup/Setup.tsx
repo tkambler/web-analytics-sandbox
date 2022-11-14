@@ -7,16 +7,22 @@ import { withRouter } from './Router';
 import { withTheme } from './Theme';
 import { withToast } from './Toast';
 import { withGrowthBook } from './GrowthBook';
+import { withSetupEvents } from './SetupEvents';
+import { withState } from './State';
 import { compose } from 'lodash/fp';
 export { useToast } from './Toast';
-export { useFeature } from './GrowthBook';
+export { useExperiment, useFeature } from './GrowthBook';
+export { actions, useAppState } from './State';
+import './msw';
 import './styles.scss';
 
 export const Setup = compose(
   withRouter,
   withTheme,
   withToast,
+  withState,
   withGrowthBook,
+  withSetupEvents,
 )((props) => props.children);
 
 export default Setup;

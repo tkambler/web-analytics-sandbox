@@ -2,17 +2,20 @@ import React, { useEffect, useState } from 'react';
 import {
   GrowthBook,
   GrowthBookProvider,
+  useExperiment,
   useFeature,
 } from '@growthbook/growthbook-react';
 import { growthBookEnvKey } from '@app/config';
+import { anonymousID } from '@app/lib/analytics';
+import { useAppState } from './State';
 
-export { useFeature };
+export { useExperiment, useFeature };
 
 const growthbook = new GrowthBook({
   // Allows you to use the Chrome DevTools Extension to test/debug.
   enableDevMode: true,
   trackingCallback: (experiment, result) => {
-    console.log({
+    console.log('trackingCallback', {
       experimentId: experiment.key,
       variationId: result.variationId,
     });
@@ -21,8 +24,23 @@ const growthbook = new GrowthBook({
 
 const GrowthBookWrapper = ({ children }) => {
   const [ready, setReady] = useState(false);
+  const { user } = useAppState();
 
   useEffect(() => {
+    const attributes = (() => {
+      if (user) {
+        return {
+          id: user.id,
+          anonymousID,
+        };
+      } else {
+        return {
+          id: null,
+          anonymousID,
+        };
+      }
+    })();
+    growthbook.setAttributes(attributes);
     fetch('http://localhost:3100/api/features/' + growthBookEnvKey)
       .then((res) => res.json())
       .then((json) => {
@@ -45,7 +63,9 @@ const GrowthBookWrapper = ({ children }) => {
 
         setReady(true);
       });
-  }, []);
+  }, [
+    user,
+  ]);
 
   if (!ready) {
     return null;

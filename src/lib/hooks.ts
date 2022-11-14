@@ -5,4 +5,4 @@ export {
   useParams,
 } from 'react-router-dom';
 export { useSnackbar } from 'notistack';
-export { useFeature, useToast } from '@app/components/Setup';
+export { useExperiment, useFeature, useToast } from '@app/components/Setup';
