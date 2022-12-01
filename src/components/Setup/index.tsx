@@ -1,2 +1,2 @@
 export * from './Setup';
-export { default } from './Setup';
+export { default, withSetup } from './Setup';

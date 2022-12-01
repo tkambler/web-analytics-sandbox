@@ -3,6 +3,7 @@
  * app (e.g. loading default stylesheets, fetching session data, etc...). Just wrap your child nodes up in
  * Setup, and you should be good to go.
  */
+import React from 'react';
 import { withRouter } from './Router';
 import { withTheme } from './Theme';
 import { withToast } from './Toast';
@@ -26,3 +27,7 @@ export const Setup = compose(
 )((props) => props.children);
 
 export default Setup;
+
+export const withSetup = Component => {
+  return props => <Setup><Component {...props} /></Setup>;
+};
