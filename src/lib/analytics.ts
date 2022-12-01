@@ -22,7 +22,7 @@ import cookies from 'js-cookie';
  *
  * @see https://umami.is/docs/tracker-functions
  */
-// declare var umami: any;
+declare var umami: any;
 
 declare var jitsu: any;
 
@@ -58,5 +58,6 @@ export const id = (properties: Record<string, any>) => {
 };
 
 export const track = (eventName: string, eventMeta?: Record<string, any>) => {
-  jitsu('track', eventName, eventMeta);
+  // jitsu('track', eventName, eventMeta);
+  umami.trackEvent(eventName, eventMeta);
 };

@@ -14,6 +14,7 @@ const PurpleButton = styled(Button)<ButtonProps>(({ theme }) => ({
 
 export const ExperimentalButton = ({ onClick }) => {
   const purpleButton = useFeature('purple_button');
+  console.log('purpleButton', purpleButton);
   const ButtonVariant = purpleButton.on ? PurpleButton : Button;
 
   console.log('purpleButton', purpleButton);

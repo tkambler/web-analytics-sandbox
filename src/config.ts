@@ -1,1 +1,1 @@
-export const growthBookEnvKey = 'prod_JDQYiVcMrYKqDBAibEMeprLOwlv1Th8VMwUO2b9qX6o';
+export const growthBookEnvKey = 'prod_irGlpgW9QIq1xL5JDbcr2a114px2eEILaaBtyi3labs';

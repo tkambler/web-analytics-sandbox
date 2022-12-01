@@ -9,6 +9,7 @@ import thunkMiddleware from 'redux-thunk';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useLocation, useHistory } from '@app/lib/hooks';
 import { createSession, destroySession, getSession } from '@app/lib/apis/session';
+import { track } from '@app/lib/analytics';
 
 const LoginStateContext = React.createContext(null);
 
@@ -19,7 +20,13 @@ export function useAppState() {
 export const actions = {
   login: (email, password, toast) => {
     return async (dispatch, getState) => {
+      track('Login attempt', {
+        email,
+      });
       const session = await createSession(email, password);
+      track('Login', {
+        email,
+      });
       dispatch({
         type: 'setUser',
         payload: {
@@ -33,6 +40,10 @@ export const actions = {
   },
   logout: (toast) => {
     return async (dispatch, getState) => {
+      const { user } = getState();
+      track('Logout', {
+        email: user.email,
+      });
       await destroySession();
       dispatch({
         type: 'signout',
@@ -105,19 +116,6 @@ export function withState(Component) {
         dispatch(actions.getSession());
       }
     }, [state.initialized]);
-
-    React.useEffect(() => {
-      if (!state.initialized) {
-        return;
-      }
-      if (
-        state.user &&
-        location.pathname !== '/create' &&
-        location.pathname.indexOf('/whiteboards') !== 0
-      ) {
-        history.push('/whiteboards');
-      }
-    }, [state.initialized, state.user]);
 
     React.useEffect(() => {
       console.log('State changed:', state);
