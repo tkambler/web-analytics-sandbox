@@ -20,11 +20,11 @@ export function useAppState() {
 export const actions = {
   login: (email, password, toast) => {
     return async (dispatch, getState) => {
-      track('Login attempt', {
+      track('login_attempt', {
         email,
       });
       const session = await createSession(email, password);
-      track('Login', {
+      track('login', {
         email,
       });
       dispatch({
@@ -41,7 +41,7 @@ export const actions = {
   logout: (toast) => {
     return async (dispatch, getState) => {
       const { user } = getState();
-      track('Logout', {
+      track('logout', {
         email: user.email,
       });
       await destroySession();

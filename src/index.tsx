@@ -10,9 +10,11 @@ const App = (): React.ReactElement => {
   if (!user) {
     return <Login />;
   }
-  return <TopBar>
-    <Routes />
-  </TopBar>
+  return (
+    <TopBar>
+      <Routes />
+    </TopBar>
+  );
 };
 
 const Composed = withSetup(App);

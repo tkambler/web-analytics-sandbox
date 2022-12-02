@@ -1,21 +1,23 @@
-// import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import cookies from 'js-cookie';
+import { Events } from '@app/types';
 
-// const cookieName = 'WEB_ANALYTICS_SANDBOX_ANONYMOUS_ID';
+const cookieName = 'WEB_ANALYTICS_SANDBOX_ANONYMOUS_ID';
+const attributes = {};
 
-// export const getAnonymousID = () => {
-//   const value = cookies.get(cookieName);
-//   if (value) {
-//     console.log('Anonymous ID read from cookie:', value);
-//     return value;
-//   }
-//   const newValue = uuid();
-//   console.log('Assigning anonymous ID to user:', newValue);
-//   cookies.set(cookieName, newValue, {
-//     expires: 200,
-//   });
-//   return newValue;
-// };
+export const getAnonymousID = () => {
+  const value = cookies.get(cookieName);
+  if (value) {
+    console.log('Anonymous ID read from cookie:', value);
+    return value;
+  }
+  const newValue = uuid();
+  console.log('Assigning anonymous ID to user:', newValue);
+  cookies.set(cookieName, newValue, {
+    expires: 200,
+  });
+  return newValue;
+};
 
 /**
  * Umami is loaded via a script tag in the page header.
@@ -24,40 +26,17 @@ import cookies from 'js-cookie';
  */
 declare var umami: any;
 
-declare var jitsu: any;
-
-// export const trackEvent = (
-//   eventName: string,
-//   eventMeta?: Record<string, any>,
-//   url?: string,
-//   siteId?: string
-// ) => {
-//   eventMeta = eventMeta || {};
-//   Object.assign(eventMeta, {
-//     anonymousID: getAnonymousID(),
-//   });
-//   umami.trackEvent(eventName, eventMeta, url, siteId);
-// };
-
-// export const trackView = (url: string, referrer?: string, siteId?: string) => {
-//   umami.trackView(url, referrer, siteId);
-// };
-
-// Jitsu
-
-export const anonymousID = cookies.get('__eventn_id');
+export const anonymousID = getAnonymousID();
 
 console.log('anonymousID is:', anonymousID);
 
-export const set = (properties: Record<string, any>) => {
-  jitsu('set', properties);
+export const setAttributes = attrs => {
+  Object.assign(attributes, attrs);
 };
 
-export const id = (properties: Record<string, any>) => {
-  jitsu('id', properties);
-};
-
-export const track = (eventName: string, eventMeta?: Record<string, any>) => {
-  // jitsu('track', eventName, eventMeta);
-  umami.trackEvent(eventName, eventMeta);
+export const track = (eventName: Events, eventMeta?: Record<string, any>) => {
+  umami.trackEvent(eventName, {
+    ...(eventMeta || {}),
+    ...attributes,
+  });
 };

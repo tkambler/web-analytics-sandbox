@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import {
   GrowthBook,
   GrowthBookProvider,
@@ -6,7 +7,7 @@ import {
   useFeature,
 } from '@growthbook/growthbook-react';
 import { growthBookEnvKey } from '@app/config';
-import { anonymousID } from '@app/lib/analytics';
+import { anonymousID, setAttributes } from '@app/lib/analytics';
 import { useAppState } from './State';
 
 export { useExperiment, useFeature };
@@ -31,36 +32,23 @@ const GrowthBookWrapper = ({ children }) => {
       if (user) {
         return {
           id: user.id,
+          loggedIn: true,
           anonymousID,
         };
       } else {
         return {
           id: null,
+          loggedIn: false,
           anonymousID,
         };
       }
     })();
+    setAttributes(attributes);
     growthbook.setAttributes(attributes);
-    fetch('http://localhost:3100/api/features/' + growthBookEnvKey)
+    fetch('http://localhost:3100/api/features/' + growthBookEnvKey + '?rand=' + uuid())
       .then((res) => res.json())
       .then((json) => {
-
         growthbook.setFeatures(json.features);
-
-        /*
-        // TODO: replace with real targeting attributes
-        growthbook.setAttributes({
-          "id": "foo",
-          "deviceId": "foo",
-          "company": "foo",
-          "loggedIn": true,
-          "employee": true,
-          "country": "foo",
-          "browser": "foo",
-          "url": "foo"
-        });
-        */
-
         setReady(true);
       });
   }, [
