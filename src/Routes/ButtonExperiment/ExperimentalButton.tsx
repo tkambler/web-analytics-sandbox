@@ -16,7 +16,9 @@ export const ExperimentalButton = ({ onClick }) => {
   const purpleButton = useFeature('purple_button');
   console.log('purpleButton', purpleButton);
   const ButtonVariant = purpleButton.on ? PurpleButton : Button;
-
+  const exp = useFeature('button_experiment');
+  console.log('exp', exp);
+  console.log('exp.value', exp.value);
   console.log('purpleButton', purpleButton);
 
   return (

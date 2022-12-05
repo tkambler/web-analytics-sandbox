@@ -20,13 +20,34 @@ npm i && \
 
 Access the GrowthBook UI at [this URL](http://localhost:3200/). Create a new account and sign in. Note the client-side SDK key and modify `./src/config.ts` accordingly.
 
-## Jitsu
-
-Access the Jitsu UI at [this URL](http://localhost:8000/). Create a new account and sign in.
-
 ## Umami
 
 Access the Umami UI at [this URL](http://localhost:3000). Create a new account and sign in.
+
+### Querying Event Data
+
+```
+SELECT
+	e.event_uuid, e.event_name, e.created_at, ed.event_data,
+	ed.event_data ->> 'id' AS user_id, ed.event_data ->> 'anonymousID' AS anonymous_id
+FROM
+	event AS e
+INNER JOIN event_data AS ed ON ed.event_id = e.event_id
+```
+
+#### Querying for a Specific Event
+
+```
+SELECT
+	e.event_uuid, e.event_name, e.created_at, ed.event_data,
+	ed.event_data ->> 'id' AS user_id, ed.event_data ->> 'anonymousID' AS anonymous_id
+FROM
+	event AS e
+INNER JOIN event_data AS ed ON ed.event_id = e.event_id
+WHERE
+	e.event_name = 'button_clicked'
+```
+
 ## React App
 
 Access the React application at [this URL](http://localhost:9011). There is no supporting back-end server. All API endpoints pertaining to session management are mocked out [here](./src/components/Setup/msw.ts) with [MSW](https://mswjs.io/).

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -25,12 +25,14 @@ import MailIcon from '@mui/icons-material/Mail';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Tooltip from '@mui/material/Tooltip';
 import { actions, useAppState, useToast } from '@app/components/Setup';
 import { useHistory, useLocation } from '@app/lib/hooks';
 import SearchInput from './SearchInput';
 import Alerts from './Alerts';
+import { useFeature } from '@app/lib/hooks';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 const appTitle = 'Web Analytics Sandbox';
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -109,6 +111,12 @@ function Bar({ children, sidebar: { items } }) {
   const toast = useToast();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  const enabledItems = useMemo(() => {
+    return items.filter(item => typeof item.enabled === 'boolean' ? item.enabled : true);
+  }, [
+    items,
+  ]);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -274,31 +282,36 @@ function Bar({ children, sidebar: { items } }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {items.map(({ label, icon, link }) => (
+          {enabledItems.map(({ label, icon, link }) => (
             <ListItem key={label} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-                onClick={() => {
-                  if (location.pathname !== link) {
-                    history.push(link);
-                  }
-                }}
-              >
-                <ListItemIcon
+              <Tooltip title={open ? '' : label} placement="right-end">
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                  onClick={() => {
+                    if (location.pathname !== link) {
+                      history.push(link);
+                    }
                   }}
                 >
-                  {icon}
-                </ListItemIcon>
-                <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={label}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </Tooltip>
             </ListItem>
           ))}
         </List>
@@ -312,6 +325,10 @@ function Bar({ children, sidebar: { items } }) {
 }
 
 const Container = ({ children }) => {
+
+  const accountEditor = useFeature('account_editor');
+  console.log('accountEditor', accountEditor);
+
   return (
     <Bar
       sidebar={{
@@ -326,6 +343,12 @@ const Container = ({ children }) => {
             icon: <QuizIcon />,
             link: '/button-experiment',
           },
+          {
+            label: 'My Account',
+            icon: <AccountCircle />,
+            link: '/account',
+            enabled: accountEditor.on,
+          }
         ],
       }}
     >

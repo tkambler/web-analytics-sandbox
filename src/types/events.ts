@@ -4,4 +4,5 @@ export type Events =
   | 'logout'
   | 'app_rendered'
   | 'login_attempt'
-  | 'search_performed';
+  | 'search_performed'
+  | 'experiment_viewed';

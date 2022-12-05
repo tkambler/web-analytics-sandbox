@@ -14,11 +14,6 @@ const config = {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
     alias: {
       app: path.resolve(__dirname, 'src'),
-      '@tkambler/ag-grid-personal': path.resolve(
-        __dirname,
-        'vendor',
-        'ag-grid-personal'
-      ),
     },
   },
   plugins: [

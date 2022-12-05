@@ -8,13 +8,15 @@ const users = [
     last_name: 'Doe',
     email: 'john.doe@fakesite.local',
     password: '123',
+    role: 'developer',
   },
   {
     id: 2,
     first_name: 'Jane',
     last_name: 'Doe',
     email: 'jane.doe@fakesite.local',
-    password: 'abc',
+    password: '123',
+    role: 'user',
   },
 ];
 
